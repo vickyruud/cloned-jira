@@ -2,7 +2,7 @@ import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 
 //Create apollo client
 const apolloClient = new ApolloClient({
-  uri: "https://gql-technical-assignment.herokuapp.com/graphql",
+  uri: "http://localhost:3000/api/tasks",
   cache: new InMemoryCache(),
 });
 
