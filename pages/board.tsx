@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
+import { Row } from "react-bootstrap";
 
 const AllTasksQuery = gql`
   query {
@@ -18,7 +19,14 @@ const board = () => {
       console.log(data.tasks);
     },
   });
-  return <div>Board</div>;
+
+  return (
+    <div className="d-flex flex-column pt-3 h-100">
+      <Row>
+        <h1>Project Title</h1>
+      </Row>
+    </div>
+  );
 };
 
 export default board;

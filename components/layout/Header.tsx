@@ -8,7 +8,7 @@ const Header = () => {
         <NavbarBrand>Project Management</NavbarBrand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          <Navbar.Text>
+          <Navbar.Text className="p-3">
             Signed in as <a href="#login">Looney Luna</a>
           </Navbar.Text>
           <Link href="/" passHref>
