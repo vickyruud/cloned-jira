@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { Row } from "react-bootstrap";
-import { Task } from "../graphql/types";
-import TaskComponent from "../components/TaskComponent";
+import BoardSection from "../components/BoardSection";
 
 const AllTasksQuery = gql`
   query {
@@ -16,11 +15,20 @@ const AllTasksQuery = gql`
 `;
 
 const board = () => {
+  const [tasks, setTasks] = useState([]);
+
   const { data, loading, error } = useQuery(AllTasksQuery, {
     onCompleted: (data) => {
       console.log(data.tasks);
+      setTasks(data.tasks);
     },
   });
+
+  const sections: Array<String> = ["Backlog", "In-Progress", "Review", "Done"];
+
+  if (loading) return <p>Loading....</p>;
+
+  if (error) return <p>Error!</p>;
 
   return (
     <div className="pt-3 h-100 d-flex flex-column">
@@ -28,17 +36,18 @@ const board = () => {
         <h1>Project Title</h1>
       </Row>
       <div className="board-container d-flex flex-row flex-grow-1">
-        {data &&
-          data.tasks.map((task: Task) => {
+        <>
+          {sections.map((section: String, index: number) => {
+            let filteredData: Array<Task> = data
+              ? data.tasks.filter((task: Task) => {
+                  return task.status === section;
+                })
+              : [];
             return (
-              <TaskComponent
-                title={task.title}
-                description={task.description}
-                id={task.id}
-                key={task.id}
-              />
+              <BoardSection title={section} tasks={filteredData} key={index} />
             );
           })}
+        </>
       </div>
     </div>
   );
