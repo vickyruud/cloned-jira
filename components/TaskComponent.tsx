@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button, Card, Form, Modal } from "react-bootstrap";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 const UpdateTaskMutation = gql`
   mutation UpdateTaskMutation(
@@ -33,7 +35,12 @@ const DeleteTaskMutation = gql`
   }
 `;
 
-const TaskComponent: React.FC<Task> = ({ title, description, id }) => {
+const TaskComponent: React.FC<Task> = ({
+  title,
+  description,
+  id,
+  boardCategory,
+}) => {
   const [updateTask, { data, loading, error }] =
     useMutation(UpdateTaskMutation);
   const [deleteTask] = useMutation(DeleteTaskMutation);
@@ -50,17 +57,31 @@ const TaskComponent: React.FC<Task> = ({ title, description, id }) => {
     setShowModal(true);
   };
 
-  const handleTaskUpdate = (e) => {
+  const handleTaskUpdate = (e: any) => {
     e.preventDefault();
     updateTask({
-      variables: { title: taskTitle, description: taskDescription, id: id },
+      variables: {
+        title: taskTitle,
+        description: taskDescription,
+        id: id,
+        status: boardCategory,
+      },
+    });
+    handleClose();
+  };
+
+  const handleTaskDelete = () => {
+    deleteTask({
+      variables: {
+        id: id,
+      },
     });
     handleClose();
   };
 
   return (
     <>
-      <Card className="task-container">
+      <Card className="task-container" onClick={handleShow}>
         <Card.Body>{title}</Card.Body>
       </Card>
       <Modal show={showModal} onHide={handleClose}>
@@ -92,9 +113,18 @@ const TaskComponent: React.FC<Task> = ({ title, description, id }) => {
                 onChange={(e) => setAssignTo(e.target.value)}
               ></Form.Select>
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Update
-            </Button>
+            <div className="d-flex justify-content-between">
+              <Button variant="primary" type="submit">
+                Update
+              </Button>
+              <Button variant="primary" type="submit">
+                <FontAwesomeIcon
+                  icon={faTrashAlt}
+                  style={{ padding: "2px" }}
+                  onClick={handleTaskDelete}
+                />
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
