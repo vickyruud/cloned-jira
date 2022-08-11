@@ -19,7 +19,6 @@ const board = () => {
 
   const { data, loading, error } = useQuery(AllTasksQuery, {
     onCompleted: (data) => {
-      console.log(data.tasks);
       setTasks(data.tasks);
     },
   });
